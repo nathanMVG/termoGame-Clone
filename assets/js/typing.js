@@ -2,13 +2,14 @@ document.addEventListener("DOMContentLoaded", onLoad);
 
 function onLoad(event) {
     const inputBoxes = document.querySelectorAll(".termoInput");
-
+    inputBoxes[0].focus();
+    
     inputBoxes.forEach((inputBox, index) => 
     {
         inputBox.addEventListener("input", (event) => goToNextInput(event, inputBoxes));
         inputBox.addEventListener("input", onLetterSubstitution)
         inputBox.addEventListener("focus", moveCursorToEnd)
-        inputBox.addEventListener("keydown", (event) => onBackspace(event, inputBoxes, index));
+        inputBox.addEventListener("keydown", (event) => onBackspace(event, inputBoxes, index)); 
         inputBox.addEventListener("keydown", pressedKeyValidator);
     });
 }

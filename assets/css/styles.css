@@ -64,3 +64,15 @@ main{
     background-color: #4C4347;
     z-index: -1;
 }
+
+.inputWrapper.absentStyle::before {
+    background-color: #312A2C;
+}
+
+.inputWrapper.correctStyle::before {
+    background-color: #3AA394;
+}
+
+.inputWrapper.misplacedStyle::before {
+    background-color: #D3AD69;
+}
