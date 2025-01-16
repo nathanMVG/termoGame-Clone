@@ -1,16 +1,19 @@
 document.addEventListener("DOMContentLoaded", onLoad);
+const finalIndexes = [4,9,14,19,24,29];
 
-function onLoad(event) {
+function onLoad() {
     const inputBoxes = document.querySelectorAll(".termoInput");
     inputBoxes[0].focus();
     
     inputBoxes.forEach((inputBox, index) => 
     {
-        inputBox.addEventListener("input", (event) => goToNextInput(event, inputBoxes));
         inputBox.addEventListener("input", onLetterSubstitution)
         inputBox.addEventListener("focus", moveCursorToEnd)
         inputBox.addEventListener("keydown", (event) => onBackspace(event, inputBoxes, index)); 
         inputBox.addEventListener("keydown", pressedKeyValidator);
+
+        if(!finalIndexes.includes(index))
+            inputBox.addEventListener("input", (event) => goToNextInput(event, inputBoxes));
     });
 }
 // Move o foco para um input LIVRE ao digitar uma letra.
@@ -18,13 +21,12 @@ function goToNextInput(event, inputBoxes)
 {
     const currentInput = event.target;
 
-    if (currentInput.value.length === 1) {
+    if (currentInput.value.length === 1) 
+    {
         const nextInput = Array.from(inputBoxes).find((inputBoxes) => inputBoxes.value === "");
 
         if (nextInput)
             nextInput.focus();
-        else // Se for undefined está na última caixa e tira o foco dela.
-            currentInput.blur();
     }
 }
 

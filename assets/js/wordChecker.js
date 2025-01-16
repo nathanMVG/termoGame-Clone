@@ -1,19 +1,25 @@
 document.addEventListener("DOMContentLoaded", onLoad);
-const mockWord = "lince";
+let contador = 0;
+const mockWord = "mutar";
 
 function onLoad()
 {
-    const inputBoxes = document.querySelectorAll("#a .termoInput");
-    window.addEventListener("keydown", (event) => onEnter(event,inputBoxes));
+    window.addEventListener("keydown", onEnter);
 }
 
-function onEnter(event,inputBoxes)
+function onEnter(event)
 {
-    const matchArray = verifyWord(inputBoxes,mockWord)
+    const main = document.querySelector("main");
+    const divs = main.querySelectorAll(".inputsContainer");
+    const inputBoxes = divs[contador].querySelectorAll(".termoInput"); //Inputs da div de índice=contador.
 
+    const matchArray = verifyWord(inputBoxes,mockWord)
+    
     if (event.key === "Enter" && isAllFilled(inputBoxes))
     {
         changeStyles(inputBoxes,matchArray);
+        contador++;  
+        divs[contador].querySelectorAll('.termoInput')[0].focus(); // Bota foco no primeiro input da próxima linha.
     }
 }
 
@@ -45,8 +51,11 @@ function verifyWord(inputBoxes,correctWord)
     return matchArray;
 }
 
-function changeStyles(inputBoxes, matchArray) {
-    const inputWrappers = document.querySelectorAll(".inputWrapper");
+function changeStyles(inputBoxes, matchArray) 
+{
+    const main = document.querySelector("main");
+    const divs = main.querySelectorAll(".inputsContainer");
+    const inputWrappers = divs[contador].querySelectorAll(".inputWrapper");
 
     const statusStyles = {
         correct: "correctStyle",
