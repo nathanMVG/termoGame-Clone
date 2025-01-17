@@ -1,3 +1,5 @@
+/* Geral */
+
 * {
     margin: 0;
     padding: 0;
@@ -20,13 +22,22 @@ main{
     gap: 1rem;
 }
 
+/* Estilos comuns a todos as divs*/
+
 .inputsContainer{
     display: flex;
     gap: 1rem;
     margin-bottom: 1rem;
 }
 
-.termoInput {
+.inputWrapper{
+    position: relative;
+    z-index: 1;
+}
+
+/***** Estilo da div ativa *****/
+
+.inputsContainer.active .termoInput {
     border: none;
     caret-color: transparent;
     border-radius: 0.1rem;
@@ -42,17 +53,7 @@ main{
     cursor: pointer ;
 }
 
-.termoInput:focus {
-    outline: none;
-    height: 3.2rem;
-}
-
-.inputWrapper{
-    position: relative;
-    z-index: 1;
-}
-
-.inputWrapper::before{
+.inputsContainer.active .inputWrapper::before{
     position: absolute;
     content: '';
     width: 4.2rem;
@@ -65,14 +66,95 @@ main{
     z-index: -1;
 }
 
-.inputWrapper.absentStyle::before {
-    background-color: #312A2C;
+.inputsContainer.active .termoInput:focus {
+    outline: none;
+    height: 3.2rem;
 }
 
-.inputWrapper.correctStyle::before {
+/***** Estilo da div waiting *****/
+
+.inputsContainer.waiting .termoInput {
+    border: none;
+    caret-color: transparent;
+    border-radius: 0.1rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    background-color: transparent;
+    color: #f6f6f6;
+    font-size: 3rem;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    text-transform: uppercase;
+    cursor: pointer ;
+}
+
+.inputsContainer.waiting .inputWrapper::before{
+    position: absolute;
+    content: '';
+    width: 4.2rem;
+    height: 4.2rem;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 0.5rem;
+    background-color: #615458;
+    z-index: -1;
+}
+
+/***** Estilo da div used *****/
+
+.inputsContainer.used .termoInput{
+    border: none;
+    caret-color: transparent;
+    border-radius: 0.1rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    background-color: transparent;
+    color: #f6f6f6;
+    font-size: 3rem;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    text-transform: uppercase;
+    cursor: pointer ;
+}
+
+.inputsContainer.used .inputWrapper.correct::before{
+    position: absolute;
+    content: '';
+    width: 4.2rem;
+    height: 4.2rem;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 0.5rem;
     background-color: #3AA394;
+    z-index: -1;
 }
 
-.inputWrapper.misplacedStyle::before {
+.inputsContainer.used .inputWrapper.absent::before{
+    position: absolute;
+    content: '';
+    width: 4.2rem;
+    height: 4.2rem;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 0.5rem;
+    background-color: #312A2C;
+    z-index: -1;
+}
+
+.inputsContainer.used .inputWrapper.misplaced::before{
+    position: absolute;
+    content: '';
+    width: 4.2rem;
+    height: 4.2rem;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 0.5rem;
     background-color: #D3AD69;
+    z-index: -1;
 }
