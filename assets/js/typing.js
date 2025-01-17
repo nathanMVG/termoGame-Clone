@@ -72,6 +72,6 @@ function pressedKeyValidator(event)
 {
     const key = event.key;
     //Se não corresponder ao padrão (letras maiúscula e minúscula) E não for tecla de funcionalidade ele não digita.
-    if (!/^[a-zA-Z]$/.test(key) && !['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(key))
+    if (!/^[a-zA-Z]$/.test(key) && !["Backspace", "ArrowLeft", "ArrowRight", "Delete"].includes(key))
       event.preventDefault();
 }
