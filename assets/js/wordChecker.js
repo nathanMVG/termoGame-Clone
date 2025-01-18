@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", onLoad);
-const mockWord = "feita";
+const mockWord = "ondas";
 
 function onLoad()
 {
@@ -31,32 +31,46 @@ function isAllFilled(inputBoxes)
     return false;
 }
 
-function verifyWord(inputBoxes, correctWord) {
+function verifyWord(inputBoxes, correctWord)
+{
 
     const inputLetters = Array.from(inputBoxes).map(input => input.value.toLowerCase());
     const correctLetters = correctWord.toLowerCase().split("");
 
-    const usedIndexes = [];
+    // Rastreio de letras já usadas.
+    const usedCorrect = Array(correctWord.length).fill(false);
 
-    const matchArray = inputLetters.map((letter, index) => 
+    // Processa os corretos.
+    const halfMatchArray = inputLetters.map((letter, index) => 
+    {
+        if (letter === correctLetters[index]) 
         {
-            if (letter === correctLetters[index]) 
+            usedCorrect[index] = true; 
+            return "correct";
+        }
+        return null; // Apenas preenche espaço para posterior aplicação do segundo map.
+    });
+
+    // Processa os misplaced e absent
+    const matchArray = halfMatchArray.map((status, index) => 
+    {
+        if (status === "correct")
+            return status; 
+
+        const letter = inputLetters[index];
+        for (let i = 0; i < correctLetters.length; i++) 
+        {
+            // Procura por uma correspondência "misplaced" válida
+            if (correctLetters[i] === letter && !usedCorrect[i])
             {
-                usedIndexes.push(index); // Marca índice como usado.
-                return "correct";
-            }
-    
-            const misplacedIndex = correctLetters.findIndex((l, i) => l === letter && !usedIndexes.includes(i));
-    
-            if (misplacedIndex !== -1)
-            {
-                usedIndexes.push(misplacedIndex); // Marca índice como usado.
+                usedCorrect[i] = true;
                 return "misplaced";
             }
-            return "absent";
-        });
+        }
+        return "absent";
+    });
 
-    return matchArray;
+    return matchArray
 }
 
 function changeStyles(inputBoxes, matchArray) {
@@ -77,7 +91,7 @@ function changeStyles(inputBoxes, matchArray) {
 
     if (didWin(inputWrappers)) 
     {
-        // WIN LOGIC
+        showMessage("Você ganhou. Parabéns!")
     } 
     else if (nextDiv) // Verifique se a próxima div existe.
     { 
@@ -90,11 +104,25 @@ function changeStyles(inputBoxes, matchArray) {
     } 
     else 
     {
-        // LOSE LOGIC
+        showMessage("Não foi dessa vez =(")
     }
 }
 
 function didWin(inputWrappers) {
     const filteredInputs = Array.from(inputWrappers).filter(inputWrapper => inputWrapper.classList.contains("correct"))
     return filteredInputs.length === 5;
+}
+
+function showMessage(message,permanent=true)
+{
+    const h1 = document.querySelector("h1");
+
+    h1.classList.add("sla");
+    h1.style.setProperty('--before-content', `"${message}"`);
+
+    if(!permanent)
+        setTimeout(()=>
+        {
+            h1.classList.remove("sla");
+        },2000)
 }
