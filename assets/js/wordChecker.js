@@ -7,6 +7,9 @@ function onLoad()
     //Desabilitando as caixas de texto das divs não ativas.
     const inputBoxesToDisable = document.querySelectorAll(".inputsContainer:not(.active) .termoInput");
     inputBoxesToDisable.forEach((inputBox)=>inputBox.disabled=true)
+
+    const playAgainBtn = document.querySelector("#playAgain-btn");
+    playAgainBtn.addEventListener("click",()=>location.reload())
 }
 
 function onEnter(event)
@@ -73,7 +76,8 @@ function verifyWord(inputBoxes, correctWord)
     return matchArray
 }
 
-function changeStyles(inputBoxes, matchArray) {
+function changeStyles(inputBoxes, matchArray) 
+{
     const inputWrappers = document.querySelectorAll(".inputsContainer.active .inputWrapper");
     const parentDiv = inputWrappers[0].parentElement;
     const nextDiv = parentDiv.nextElementSibling;
@@ -92,6 +96,7 @@ function changeStyles(inputBoxes, matchArray) {
     if (didWin(inputWrappers)) 
     {
         showMessage("Você ganhou. Parabéns!")
+        showPlayAgain();
     } 
     else if (nextDiv) // Verifique se a próxima div existe.
     { 
@@ -105,10 +110,12 @@ function changeStyles(inputBoxes, matchArray) {
     else 
     {
         showMessage("Não foi dessa vez =(")
+        showPlayAgain();
     }
 }
 
-function didWin(inputWrappers) {
+function didWin(inputWrappers) 
+{
     const filteredInputs = Array.from(inputWrappers).filter(inputWrapper => inputWrapper.classList.contains("correct"))
     return filteredInputs.length === 5;
 }
@@ -125,4 +132,11 @@ function showMessage(message,permanent=true)
         {
             h1.classList.remove("sla");
         },2000)
+}
+
+function showPlayAgain()
+{
+    const playAgainBtn = document.querySelector("#playAgain-btn");
+    playAgainBtn.style.visibility="visible"
+    playAgainBtn.style.opacity="1";
 }
