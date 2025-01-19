@@ -1,11 +1,13 @@
 document.addEventListener("DOMContentLoaded", onLoad);
-const mockWord = "ondas";
+const alreadyPlayedWords = [];
+let chosenWord;
+setWord();
 
 function onLoad()
 {
-    loadWordList().then(wordList => {
+    loadWordList("wordsFull").then(wordList => {
 
-    window.addEventListener("keydown", (event) => onEnter(event,wordList,mockWord));
+    window.addEventListener("keydown", (event) => onEnter(event,wordList,chosenWord));
     //Desabilitando as caixas de texto das divs não ativas.
     const inputBoxesToDisable = document.querySelectorAll(".inputsContainer:not(.active) .termoInput");
     inputBoxesToDisable.forEach((inputBox)=>inputBox.disabled=true)
@@ -35,7 +37,7 @@ function onEnter(event,wordList,correctWord)
     else if(event.key === "Enter" && !isAllFilled(inputBoxes)){
         showMessage("Só palavras de 5 letras!",false);
     }
-    else if(event.key === "Enter" && !wordList.includes(typedWordCorrected)){
+    else if(event.key === "Enter" && !wordList.includes(typedWordCorrected) && document.querySelector("#playAgain-btn").style.visibility==="hidden"){
         showMessage("Palavra inválida.",false);
     }
 }
@@ -202,6 +204,8 @@ function resetGame()
     const playAgainBtn = document.querySelector("#playAgain-btn");
     playAgainBtn.style.visibility = "hidden";
     playAgainBtn.style.opacity = "0";
+
+    setWord();
 }
 
 function normalizeWord(word) {
@@ -225,9 +229,9 @@ function wordCorrector(misspelledWord, wordList)
     return null;
 }
 
-async function loadWordList() 
+async function loadWordList(wordListFileName) 
 {
-    const response = await fetch("./assets/wordlists/wordsFull.txt");
+    const response = await fetch(`./assets/wordlists/${wordListFileName}.txt`);
     const responseText = await response.text();  // Aguarde a resolução da Promise
     const wordList = responseText.split("\n").map(word => word.trim()).filter(word => word.length > 0);
   
@@ -241,4 +245,43 @@ function changeDisplayedCharacters(inputBoxes,typedWord,wordList)
 
     if(accentuatedArray.length!==0)
         inputBoxes.forEach((inputBox,index)=> inputBox.value=accentuatedArray[index]);
+}
+
+async function pickRandomWord()
+{
+    wordList = await loadWordList("wordToGuess");
+    const availableWords = arrayDifference(wordList,alreadyPlayedWords);
+    const numberOfAvailableWords = availableWords.length;
+
+    if(numberOfAvailableWords)
+    {
+        const pickedWord = availableWords[getRandomInteger(0,numberOfAvailableWords-1)];
+        alreadyPlayedWords.push(pickedWord);
+        return pickedWord;
+    }
+    else // Lidando com o caso em não há mais palavras disponíveis.  
+    {
+        alreadyPlayedWords.length=0; // Reseta o array, ou seja, começa a contar todas as palavras como não jogadas.
+        return "trote"; // Designa uma palavra aleatória para não dar erro.
+    }
+}
+
+function arrayDifference(array1, array2) {
+    const onlyInArray1 = array1.filter(element => !array2.includes(element));
+
+    const onlyInArray2 = array2.filter(element => !array1.includes(element));
+    
+    return onlyInArray1.concat(onlyInArray2);
+}
+
+function getRandomInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function setWord()
+{
+    pickRandomWord(alreadyPlayedWords).then(pickedWord => {
+        chosenWord=pickedWord;
+        console.log(pickedWord);
+    })
 }
