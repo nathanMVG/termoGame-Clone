@@ -9,7 +9,7 @@ function onLoad()
     inputBoxesToDisable.forEach((inputBox)=>inputBox.disabled=true)
 
     const playAgainBtn = document.querySelector("#playAgain-btn");
-    playAgainBtn.addEventListener("click",()=>location.reload())
+    playAgainBtn.addEventListener("click",resetGame)
 }
 
 function onEnter(event)
@@ -139,4 +139,50 @@ function showPlayAgain()
     const playAgainBtn = document.querySelector("#playAgain-btn");
     playAgainBtn.style.visibility="visible"
     playAgainBtn.style.opacity="1";
+}
+
+function resetGame() 
+{
+    // Limpando os valores dos inputs.
+    const allInputs = document.querySelectorAll(".termoInput");
+    allInputs.forEach(input => {
+        input.value = '';
+    });
+
+    // Removendo as classes das divs e dos input wrappers.
+    const allInputWrappers = document.querySelectorAll(".inputWrapper");
+    allInputWrappers.forEach(wrapper => {
+        wrapper.classList.remove("correct", "misplaced", "absent");
+    });
+
+    const allContainers = document.querySelectorAll(".inputsContainer");
+    allContainers.forEach(container => {
+        container.classList.remove("active", "used"); // Botando todos como waiting.
+        container.classList.add("waiting");
+        
+        // Desabilitando inputs marcados com waiting.
+        if (container.classList.contains("waiting")) {
+            const inputsInContainer = container.querySelectorAll(".termoInput");
+            inputsInContainer.forEach(input => input.disabled = true);
+        }
+    });
+
+    // Colocando a primeira div como ativa e reabilitando seus inputs.
+    const firstContainer = document.querySelector(".inputsContainer");
+    firstContainer.classList.replace("waiting","active");
+
+    const inputsInFirstContainer = firstContainer.querySelectorAll(".termoInput");
+    inputsInFirstContainer.forEach(input => input.disabled = false);
+
+    firstContainer.querySelector(".termoInput").focus();
+
+    // Tirando a mensagem de vitória.
+    const h1 = document.querySelector("h1");
+    h1.classList.remove("sla");
+    h1.style.setProperty('--before-content', '""');
+
+    // Tirando o botão de play again.
+    const playAgainBtn = document.querySelector("#playAgain-btn");
+    playAgainBtn.style.visibility = "hidden";
+    playAgainBtn.style.opacity = "0";
 }
